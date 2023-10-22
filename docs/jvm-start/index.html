@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Jvm Start | anso33-tech-log</title>
+<meta name="keywords" content="">
+<meta name="description" content="JVM Write Once, Run Anywhere JVM은 Java Virtual Machine으로 자바 코드 또는 어플리케이션을 실행할 수 있는 런타임환경을 제공하는 엔진을 말합니다. 일반적으로 다른 프로그래밍 언어에서는 컴파일러가 특정한 시스템에 대한 기계어를 생성하기 때문에 한번 빌드된 코드는 빌드했던 시스템에서만 실행할 수 있습니다. 하지만, 자바 컴파일러(javac)는 JVM(Java Virtual Machine)으로 알려진 VM(Virtual Machine)에 대한 코드를 생성하기 때문에 운영체제에 종속되지 않고 한번 컴파일된 코드는 JVM이 있다면 어디서든 바로 실행할 수 있습니다.
+자바로 작성한 코드가 실행되기까지 자바 프로그램을 실행하면 JVM은 OS로부터 메모리를 할당 받습니다.">
+<meta name="author" content="">
+<link rel="canonical" href="https://anso33.github.io/docs/jvm-start/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.5cfc680b1eeaeef9efbced92d46c2a9e876b72ee14fba85846afc4cff9e6e6f8.css" integrity="sha256-XPxoCx7q7vnvvO2S1Gwqnodrcu4U&#43;6hYRq/Ez/nm5vg=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://anso33.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://anso33.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://anso33.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://anso33.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://anso33.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="Jvm Start" />
+<meta property="og:description" content="JVM Write Once, Run Anywhere JVM은 Java Virtual Machine으로 자바 코드 또는 어플리케이션을 실행할 수 있는 런타임환경을 제공하는 엔진을 말합니다. 일반적으로 다른 프로그래밍 언어에서는 컴파일러가 특정한 시스템에 대한 기계어를 생성하기 때문에 한번 빌드된 코드는 빌드했던 시스템에서만 실행할 수 있습니다. 하지만, 자바 컴파일러(javac)는 JVM(Java Virtual Machine)으로 알려진 VM(Virtual Machine)에 대한 코드를 생성하기 때문에 운영체제에 종속되지 않고 한번 컴파일된 코드는 JVM이 있다면 어디서든 바로 실행할 수 있습니다.
+자바로 작성한 코드가 실행되기까지 자바 프로그램을 실행하면 JVM은 OS로부터 메모리를 할당 받습니다." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://anso33.github.io/docs/jvm-start/" /><meta property="article:section" content="docs" />
+<meta property="article:published_time" content="2023-10-22T14:05:54+09:00" />
+<meta property="article:modified_time" content="2023-10-22T14:05:54+09:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Jvm Start"/>
+<meta name="twitter:description" content="JVM Write Once, Run Anywhere JVM은 Java Virtual Machine으로 자바 코드 또는 어플리케이션을 실행할 수 있는 런타임환경을 제공하는 엔진을 말합니다. 일반적으로 다른 프로그래밍 언어에서는 컴파일러가 특정한 시스템에 대한 기계어를 생성하기 때문에 한번 빌드된 코드는 빌드했던 시스템에서만 실행할 수 있습니다. 하지만, 자바 컴파일러(javac)는 JVM(Java Virtual Machine)으로 알려진 VM(Virtual Machine)에 대한 코드를 생성하기 때문에 운영체제에 종속되지 않고 한번 컴파일된 코드는 JVM이 있다면 어디서든 바로 실행할 수 있습니다.
+자바로 작성한 코드가 실행되기까지 자바 프로그램을 실행하면 JVM은 OS로부터 메모리를 할당 받습니다."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Docs",
+      "item": "https://anso33.github.io/docs/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Jvm Start",
+      "item": "https://anso33.github.io/docs/jvm-start/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Jvm Start",
+  "name": "Jvm Start",
+  "description": "JVM Write Once, Run Anywhere JVM은 Java Virtual Machine으로 자바 코드 또는 어플리케이션을 실행할 수 있는 런타임환경을 제공하는 엔진을 말합니다. 일반적으로 다른 프로그래밍 언어에서는 컴파일러가 특정한 시스템에 대한 기계어를 생성하기 때문에 한번 빌드된 코드는 빌드했던 시스템에서만 실행할 수 있습니다. 하지만, 자바 컴파일러(javac)는 JVM(Java Virtual Machine)으로 알려진 VM(Virtual Machine)에 대한 코드를 생성하기 때문에 운영체제에 종속되지 않고 한번 컴파일된 코드는 JVM이 있다면 어디서든 바로 실행할 수 있습니다.\n자바로 작성한 코드가 실행되기까지 자바 프로그램을 실행하면 JVM은 OS로부터 메모리를 할당 받습니다.",
+  "keywords": [
+    
+  ],
+  "articleBody": "JVM Write Once, Run Anywhere JVM은 Java Virtual Machine으로 자바 코드 또는 어플리케이션을 실행할 수 있는 런타임환경을 제공하는 엔진을 말합니다. 일반적으로 다른 프로그래밍 언어에서는 컴파일러가 특정한 시스템에 대한 기계어를 생성하기 때문에 한번 빌드된 코드는 빌드했던 시스템에서만 실행할 수 있습니다. 하지만, 자바 컴파일러(javac)는 JVM(Java Virtual Machine)으로 알려진 VM(Virtual Machine)에 대한 코드를 생성하기 때문에 운영체제에 종속되지 않고 한번 컴파일된 코드는 JVM이 있다면 어디서든 바로 실행할 수 있습니다.\n자바로 작성한 코드가 실행되기까지 자바 프로그램을 실행하면 JVM은 OS로부터 메모리를 할당 받습니다. javac가 자바 소스코드(.java)를 자바 바이트 코드(.class)로 컴파일합니다. Class Loader가 동적 로딩을 통해 필요한 클래스들을 JVM 메모리에 로드, 링킹한 후 Runtime Data Area에 올립니다. Runtime Data Area에 로딩된 바이트 코드는 실행 엔진을 통해서 해석, 실행됩니다. JVM 안에는 뭐가 있을까? 클래스 로더, Class Loader 실행 엔진, Execution Engine 인터프리터, Interpreter JIT 컴파일러, Just-In-Time compiler 가비지 콜렉터, garbage collector 런타임 데이터 영역, runtime data area 메소드 영역, method area 힙 영역, heap area PC Register 스택 영역, stack area 네이티브 메서드, native method stack JVM 특징 스택 기반의 가상 머신: 대표적인 컴퓨터 아키텍처인 인텔 x86 아키텍처나 ARM 아키텍처와 같은 하드웨어가 레지스터 기반으로 동작하는 데 비해 JVM은 스택 기반으로 동작한다. 심볼릭 레퍼런스: 기본 자료형(primitive data type)을 제외한 모든 타입(클래스와 인터페이스)을 명시적인 메모리 주소 기반의 레퍼런스가 아니라 심볼릭 레퍼런스를 통해 참조한다. 가비지 컬렉션(garbage collection): 클래스 인스턴스는 사용자 코드에 의해 명시적으로 생성되고 가비지 컬렉션에 의해 자동으로 파괴된다. 기본 자료형을 명확하게 정의하여 플랫폼 독립성 보장: C/C++ 등의 전통적인 언어는 플랫폼에 따라 int 형의 크기가 변한다. JVM은 기본 자료형을 명확하게 정의하여 호환성을 유지하고 플랫폼 독립성을 보장한다. 네트워크 바이트 오더(network byte order): 자바 클래스 파일은 네트워크 바이트 오더를 사용한다. 인텔 x86 아키텍처가 사용하는 리틀 엔디안이나, RISC 계열 아키텍처가 주로 사용하는 빅 엔디안 사이에서 플랫폼 독립성을 유지하려면 고정된 바이트 오더를 유지해야 하므로 네트워크 전송 시에 사용하는 바이트 오더인 네트워크 바이트 오더를 사용한다. 네트워크 바이트 오더는 빅 엔디안이다. JVM Internal\n런타임 데이터 영역 JVM의 메모리 영역으로 자바 애플리케이션을 실행할 때 사용되는 데이터들을 적재하는 영역\n여기서 method area와 heap을 제외하고는 스레드 별로 독립된 공간을 가집니다.\nMethod Area JVM이 시작될 때 생성되는 공간으로 바이트 코드를 처음 메모리 공간에 올릴 때 초기화되는 대상을 저장하기 위한 메모리 공간\n클래스가 로드될 때 적재되어서 프로그램이 종료될 때까지 저장됩니다.\nfield info: 멤버 변수의 이름, 데이터 타입, 접근 제어자의 정보 method info: 메소드 이름, return 타입, 함수 매개변수, 접근 제어자의 정보 type info: class 인지 interface 인지 여부 저장, type의 속성, 이름 super class의 이름 즉 정적 필드와 클래스 구조를 가지고 있는거죠.\nrun time constant pool\n메서드 영역에 존재하는 별도의 관리 영역\n각 클래스, 인터페이스마다 별도의 constant pool이 테이블이 존재하는데 클래스 생성할 때 참조해야할 정보들을 상수로 가지고 있는 영역입니다.\nJVM은 이 constant pool을 통해 해당 메서드나 필드의 실제 메모리 상 주소를 찾아 참조합니다.\n→ 상수 자료형을 저장하여 참조하고 중복을 막는 역할을 수행한다.\nHeap Area JVM이 관리하는 프로그램 상에서 데이터를 저장하기 위해 런타임시 동적으로 할당하여 사용하는 영역\nnew 연산자로 생성되는 클래스와 인스턴스 변수, 배열 타입 등 reference type이 저장되는 곳입니다. 힙 영역에 생성된 객체와 배열을 reference type을 이용해서 JVM 스택 영역의 변수나 다른 객체의 필드가 참조할 수 있습니다.\n또한 heap은 GC의 대상이 되는 영역이죠!\nStack Area 임시적으로 사용되는 변수나 정보들이 저장되는 영역\n메서드 호출시마다 그 메서드를 위한 각각의 스택 프레임이 생성되고 메서드 안에서 사용되는 값들을 저장하고, 호출된 메서드의 매개변수, 지역변수, 리턴 값 및 연산 시 일어나는 값들을 임시로 저장합니다. 그리고 메서드 수행이 끝나면 프레임별로 삭제합니다.\n기본 타입 변수는 스택 영역에 직접 값을 가짐. 참조타입 변수는 힙 영역이나 메서드 영역의 객체 주소를 가짐. 따라서 다음과 같이 선언하면 생성된 클래스는 heap에, 클래스의 참조인 p는 stack에 저장되겠죠.\n스택 영역은 각 스레드마다 하나씩 존재하여, 스레드가 시작될 때 할당됩니다.\n프로세스가 메모리에 로드 될 때 스택 사이즈가 고정되어 있어, 런타임 시에 스택 사이즈를 바꿀 수는 없습니다. 만일 고정된 크기의 JVM 스택에서 프로그램 실행 중 메모리 크기가 충분하지 않다면 StackOverFlowError가 발생하게 될겁니다. 스레드를 종료하면 런타임 스택도 사라집니다.\nPC 레지스터 스레드가 시작될 때 생성되며, 현재 수행중인 JVM 명령어 주소를 저장하는 공간\n네이티브 메서드 스택 자바 코드가 컴파일되어 생성되는 바이트 코드가 아닌 실제 실행할 수 있는 기계어로 작성된 프로그램을 실행시키는 영역\n클래스 로더 클래스 로더는 런타임 중에 JVM의 메소드 영역에 동적으로 Java 클래스를 로드하고 링크, 초기화하여 Runtime Data Area에 올립니다.\n각각의 클래스 파일들을 찾아서 JVM 메모리에 탑재한다!!\n로딩 메소드 영역에 바이트 코드의 정보를 저장 로드된 클래스와 부모 클래스의 정보 클래스, 인터페이스, enum 여부 변수, 메소드 등의 정보 링크 로드된 클래스 파일들을 검증하고 사용할 수 있게 준비하는 과정 검증 읽어들인 클래스가 JVM 명세에 명시된 대로 구성되어 있는지 검사 준비 클래스가 필요로 하는 메모리를 할당 분석 클래스의 상수 풀 내 모든 심볼릭 레퍼런스를 메소드 영역에 있는 다이렉트 레퍼런스로 변경 초기화 클래스 변수들을 적절한 값으로 초기화한다. 클래스 로더…. 종류가 있는데요… 부트스트랩 클래스 로더 다른 모든 클래스로더의 부모가 되는 클래스 로더로 JVM을 구동시키기 위해서 가장 필수적인 라이브러리 클래스들을 로드합니다. 즉, 다른 클래스로드가 나머지 시스템이 필요한 클래스를 로드할 수 있도록 최소한의 필수 클래스 (Object, Class, Classloader 등)만 로드하는거죠! 확장 클래스 로더 (platform class loader) 부트스트랩 클래스 로더를 자기 부모로 설정하고 필요할 때 클래스로딩 작업을 부모에게 넘기는 확장 클래스로더가 생깁니다. 확장 클래스로더를 사용하면 특정 OS나 플랫폼에 네이티브 코드를 제공하고 기본 환경을 오버라이드할 수 있습니다. 애플리케이션 클래스 로더 ( = 시스템 클래스 로더) 지정된 클래스패스에 위치한 유저 클래스를 로드합니다. 개발자가 작성한 클래스 파일을 JVM에 탑재합니다. 만일 개발자가 class loader를 구현하여 사용한다고 하면 이 application class loader를 상속받아야합니다. 자바는 프로그램 실행 중 처음 보는 새 클래스를 디펜던시에 로드하고 클래스를 찾지 못한 클래스 로더는 기본적으로 자신의 부모 클래스로더에게 대신 찾아봐달라고 합니다. 이렇게 계속 거슬러 올라가 결국 부트스트랩 클래스로더도 찾지 못하면 ClassNotFoundException이 나는 겁니다.\nJVM에 관하여 - Part 2, ClassLoader\n클래스로더의 3가지 작동 원칙 Delegation Principle (위임 원칙) Visibility Principle (가시범위 원칙) Uniqueness Principle (유일성 원칙) 실행 엔진 클래스 로더를 통해서 런타임 데이터 영역에 배치된 바이트 코드를 명령어 단위로 읽어서 실행합니다. 자바 바이트 코드는 기계가 바로 수행할 수 있는 언어가 아닌, 가상머신이 이해할 수 있는 중간 레벨로 컴파일 된 코드이다 보니 실행 엔진이 이 바이트 코드를 JVM이 실행할 수 있는 형태로 변경해주는 일을 하는거죠!\n이때 실행엔진을 통해서 바이트 코드를 실행하는 방법에는 두가지가 있습니다. 가장 기본적인 방법은 바이트 코드의 명령어를 한줄씩 해석하고 수행하는 인터프리터 방식이 있고 다음으로는 JIT 컴파일러를 사용하여 실행하는 방식입니다. JIT 컴파일러는 인터프리터 방식에서 같은 코드를 필요할 때마다 해석하고 수행하기를 반복하기 때문에 나타나는 비효율성을 해결하기 위해 도입되었데요. 우선 인터프리터로 해석되는 횟수가 설정해 둔 임계값을 넘었을 때 자주 사용되는 메서드로 판단하여 native code로 해석하여 캐싱해둔 후 차후에는 native code로 바로 빠르게 실행하는 방법입니다.\n인터프리터는 각 행마다 읽어 변환을 하고, JIT 컴파일러는 바이트 코드를 전체를 읽어 한꺼번에 변환을 합니다.\nHotSpot 썬 마이크로시스템즈가 발표한 핫스팟 가상 머신은 성능 관점에서 자바에 가장 큰 변화를 가져왔는데요. 핫스팟이 나온 후에 자바는 C, C++에 뒤지지 않을 성능을 자랑하게 되었습니다.\nC++ 같은 언어는 컴퓨터와 OS가 실제로 어떻게 작동해야 하는지 개발자가 아주 세세하게 일러줘야 하는 언어로 이런 종류의 언어들은 작성한 소스 코드는 빌드하면 빌드한 그 플랫폼에 종속되는 기계어로 컴파일 됩니다. (Ahead Of Time, AOT 컴파일)\n하지만 핫스팟 VM은 JVM 내에서 프로그램의 런타임 동작을 분석하고 성능에 가장 유리한 방향으로 최적화를 적용하는 가상머신으로 개발되었습니다. 핫스팟은 인터프리티드 모드로 실행하는 동안 애플리케이션을 모니터링하면서 자주 실행되는 코드 파트를 발견해 JIT 컴파일을 수행합니다. 자주 실행된다의 기준은 임계점을 두고 이를 넘어가면 프로파일러가 해당 코드 섹션을 컴파일, 최적화합니다.\n자바는 동적 인라이닝이나 가상 호출 등으로 성능을 개선할 수 있습니다.\n핫스팟의 정교한 접근 방식 덕분에 엄청난 혜택이 생겼지만 반대로 상식적인 추론으로 애플리케이션이 동작하는 방식을 단순하게 넘겨짚을 수 없게 되었죠. 그래서 한정된 부분의 자바 코드의 성능을 분석하는 것은 전체 애플리케이션을 대상으로 분석하는 작업보다 훨씬 까다롭고 버겁습니다.\n코드 캐시 JIT compiled 코드는 코드 캐시라는 메모리 영역에 저장됩니다. 이곳에는 인터프리터 부속 등 VM 자체 네이티브 코드가 함께 들어가 있습니다. VM 시작시 코드 캐시는 설정된 값으로 최대 크기가 고정되므로 확장이 불가능합니다. 코드 캐시가 꽉차면 JIT 컴파일은 더이상 되지 않습니다.\n※ 코드 캐시가 부족할 경우\n일부 핫스팟은 컴파일만 컴파일 되고, 다른 영역은 컴파일 되지 않는다. 따라서 많은 양의 코드가 인터프리터로 실행되어 느려진다. JVM Warning이 발생한다. 하지만 이 로그는 확인하기 어렵다. 따라서 컴파일 로그를 따로 보는 편이 좋다. 일반 서버 컴파일러를 사용할 때는 컴파일 대상이 되는 클래스의 개수가 코드 캐시를 가득 채울 일은 그다지 없다. 하지만 클라이언트나 티어드 컴파일을 사용할 때는 주의해야 한다. 코드 캐시가 부족한 상황이 나타날 가능성이 크다. https://blog.naver.com/PostView.nhn?blogId=kbh3983\u0026logNo=220985785358 JIT 컴파일 JIT 컴파일은 런타임에 프로그램을 고도로 최적화한 기계어로 변환하는 기법입니다. 프로그램의 런타임 실행 정보를 수집하여 어느 부분이 자주 쓰이고, 어느 부분을 최적화해야 가장 효과가 좋은지 프로파일을 만들어 결정을 내리죠. (→ 프로파일 기반 최적화)\nJIT 서브 시스템은 실행 프로그램과 VM 리소스를 공유하므로 프로파일링 및 최적화 비용 및 성능 향상 기대치 사이의 균형을 맞추어야 합니다.\n바이트코드를 네이티브 코드로 컴파일하는 비용은 런타임에 지불됩니다. 이 과정에서 프로그램 실행에만 온전히 동원됐을 일부 리소스(CPU 사이클, 메모리)가 소비되므로 JIT 컴파일은 산발적으로 수행됩니다. 또 VM은 최적화하면 가장 좋은 지점을 파악하기 위해(핫 스팟을 찾고자) 각종 프로그램 관련 지표를 수집합니다.\n임계점에 다다른 메서드가 컴파일되면 에미터 서브 시스템이 컴파일 스레드를 가동해 바이트코드를 기계어로 변환합니다.\n핫스팟은 프로파일링 정보를 보관하지 않고 VM이 꺼지면 모두 버렸다가 켜지면 처음부터 다시 생성합니다.\n어떤 메서드가 JIT 컴파일 되고 있는지 파악하는 flag -XX:+PrintCompilation 핫스팟 내부 컴파일러 C1 (클라이언트 컴파일러) C2 (서버 컴파일러) 원래는 이름에 맞게 C1은 클라이언트 프로그램에, C2는 실행 시간이 긴 서버 프로그램에 주로 사용했지만 요즘은 구분하지 않고 환경에 맞게 최대한의 성능을 발휘하는 선택을 하도록 구성되어 있습니다.\nC1으로 컴파일하면 컴파일 시간이 더 짧지만 C2로 컴파일하면 최적화가 더 많이, 잘되어 있습니다.\n자바 6부터는 단계별 컴파일(tiered compilation) 모드를 지원하는데요. 인터프리티드 모드에서 실행하다가 C1 으로, 더 고급 최적화를 위해 C2를 수행하는 방식으로 단계를 주는 것입니다. 컴파일 방식마다 거치는 단계 순서가 다르니까 찾아보시면 좋을 것 같습니다.ㅎㅎ\n간단한 JIT 튜닝 방법 튜닝하기 전에 먼저 점검해야할 항목이 있습니다.\nprintCompilation 을 걸고 애플리케이션을 수행한다. 어느 메서드가 컴파일되었는지 기록된 로그를 수집한다. ReservedCodeCacheSize를 통해서 코드 캐시를 늘린다. 애플리케이션을 재실행한다. 확장된 캐시에서 compiled method를 살펴본다. 이 과정을 거치면서 확인해야할 부분은 다음과 같습니다.\n캐시 크기를 늘렸을 때 컴파일된 메서드의 개수가 유의미하게 늘어나는가? 주요 트랜잭션 경로상에 위치한 주요 메서드가 모두 컴파일 되었는가? 캐시 크기를 늘려도 컴파일된 메서드의 개수는 그대로이고 로딩 패턴이 뚜렷하다면 JIT 컴파일러의 리소스가 부족한게 아니기 때문에 트랜젝션이 몰리는 경로에 있는 메서드가 컴파일 로그에 전부 나타나는지 확인해야합니다. 만일 전부 나타나지 않았다면 왜 컴파일되지 않았는지 원인을 찾아야겠죠.\n",
+  "wordCount" : "1584",
+  "inLanguage": "en",
+  "datePublished": "2023-10-22T14:05:54+09:00",
+  "dateModified": "2023-10-22T14:05:54+09:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://anso33.github.io/docs/jvm-start/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "anso33-tech-log",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://anso33.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://anso33.github.io/" accesskey="h" title="anso33-tech-log (Alt + H)">anso33-tech-log</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      Jvm Start
+    </h1>
+    <div class="post-meta"><span title='2023-10-22 14:05:54 +0900 KST'>October 22, 2023</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h1 id="jvm">JVM<a hidden class="anchor" aria-hidden="true" href="#jvm">#</a></h1>
+<h2 id="write-once-run-anywhere">Write Once, Run Anywhere<a hidden class="anchor" aria-hidden="true" href="#write-once-run-anywhere">#</a></h2>
+<p>JVM은 Java Virtual Machine으로 자바 코드 또는 어플리케이션을 실행할 수 있는 런타임환경을 제공하는 엔진을 말합니다. 일반적으로 다른 프로그래밍 언어에서는 컴파일러가 특정한 시스템에 대한 기계어를 생성하기 때문에 한번 빌드된 코드는 빌드했던 시스템에서만 실행할 수 있습니다. 하지만, 자바 컴파일러(javac)는 JVM(Java Virtual Machine)으로 알려진 VM(Virtual Machine)에 대한 코드를 생성하기 때문에 운영체제에 종속되지 않고 한번 컴파일된 코드는 JVM이 있다면 어디서든 바로 실행할 수 있습니다.</p>
+<h2 id="자바로-작성한-코드가-실행되기까지">자바로 작성한 코드가 실행되기까지<a hidden class="anchor" aria-hidden="true" href="#자바로-작성한-코드가-실행되기까지">#</a></h2>
+<p><img loading="lazy" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/7b4f1c4b-3953-40fb-b55b-2620521a2d27/afa64d6f-d273-485d-acc0-3dfbd97aaf7d/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2023-09-27_%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB_1.47.49.png" alt="스크린샷 2023-09-27 오전 1.47.49.png"  />
+</p>
+<ol>
+<li>자바 프로그램을 실행하면 JVM은 OS로부터 메모리를 할당 받습니다.</li>
+<li>javac가 자바 소스코드(.java)를 자바 바이트 코드(.class)로 컴파일합니다.</li>
+<li>Class Loader가 동적 로딩을 통해 필요한 클래스들을 JVM 메모리에 로드, 링킹한 후 Runtime Data Area에 올립니다.</li>
+<li>Runtime Data Area에 로딩된 바이트 코드는 실행 엔진을 통해서 해석, 실행됩니다.</li>
+</ol>
+<h2 id="jvm-안에는-뭐가-있을까">JVM 안에는 뭐가 있을까?<a hidden class="anchor" aria-hidden="true" href="#jvm-안에는-뭐가-있을까">#</a></h2>
+<p><img loading="lazy" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/7b4f1c4b-3953-40fb-b55b-2620521a2d27/c8c54384-98c8-4971-a7ee-2d1bac29e7e7/Untitled.png" alt="Untitled"  />
+</p>
+<ul>
+<li>클래스 로더, Class Loader</li>
+<li>실행 엔진, Execution Engine
+<ul>
+<li>인터프리터, Interpreter</li>
+<li>JIT 컴파일러, Just-In-Time compiler</li>
+</ul>
+</li>
+<li>가비지 콜렉터, garbage collector</li>
+<li>런타임 데이터 영역, runtime data area
+<ul>
+<li>메소드 영역, method area</li>
+<li>힙 영역, heap area</li>
+<li>PC Register</li>
+<li>스택 영역, stack area</li>
+<li>네이티브 메서드, native method stack</li>
+</ul>
+</li>
+</ul>
+<h2 id="jvm-특징">JVM 특징<a hidden class="anchor" aria-hidden="true" href="#jvm-특징">#</a></h2>
+<ul>
+<li>스택 기반의 가상 머신: 대표적인 컴퓨터 아키텍처인 인텔 x86 아키텍처나 ARM 아키텍처와 같은 하드웨어가 레지스터 기반으로 동작하는 데 비해 JVM은 스택 기반으로 동작한다.
+<img loading="lazy" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/7b4f1c4b-3953-40fb-b55b-2620521a2d27/79b3d454-3950-4279-be28-3565b5efc365/Untitled.png" alt="Untitled"  />
+</li>
+<li>심볼릭 레퍼런스: 기본 자료형(primitive data type)을 제외한 모든 타입(클래스와 인터페이스)을 명시적인 메모리 주소 기반의 레퍼런스가 아니라 심볼릭 레퍼런스를 통해 참조한다.</li>
+<li>가비지 컬렉션(garbage collection): 클래스 인스턴스는 사용자 코드에 의해 명시적으로 생성되고 가비지 컬렉션에 의해 자동으로 파괴된다.</li>
+<li>기본 자료형을 명확하게 정의하여 플랫폼 독립성 보장: C/C++ 등의 전통적인 언어는 플랫폼에 따라 int 형의 크기가 변한다. JVM은 기본 자료형을 명확하게 정의하여 호환성을 유지하고 플랫폼 독립성을 보장한다.</li>
+<li>네트워크 바이트 오더(network byte order): 자바 클래스 파일은 네트워크 바이트 오더를 사용한다. 인텔 x86 아키텍처가 사용하는 리틀 엔디안이나, RISC 계열 아키텍처가 주로 사용하는 빅 엔디안 사이에서 플랫폼 독립성을 유지하려면 고정된 바이트 오더를 유지해야 하므로 네트워크 전송 시에 사용하는 바이트 오더인 네트워크 바이트 오더를 사용한다. 네트워크 바이트 오더는 빅 엔디안이다.</li>
+</ul>
+<p><a href="https://d2.naver.com/helloworld/1230">JVM Internal</a></p>
+<h2 id="런타임-데이터-영역">런타임 데이터 영역<a hidden class="anchor" aria-hidden="true" href="#런타임-데이터-영역">#</a></h2>
+<p>JVM의 메모리 영역으로 자바 애플리케이션을 실행할 때 사용되는 데이터들을 적재하는 영역</p>
+<p><img loading="lazy" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/7b4f1c4b-3953-40fb-b55b-2620521a2d27/8a4378cd-c720-438e-ba69-49ea029c8a8c/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2023-09-27_%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB_10.03.24.png" alt="스크린샷 2023-09-27 오전 10.03.24.png"  />
+</p>
+<p>여기서 method area와 heap을 제외하고는 스레드 별로 독립된 공간을 가집니다.</p>
+<p><img loading="lazy" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/7b4f1c4b-3953-40fb-b55b-2620521a2d27/1b0a8a25-7443-4823-ba7a-7b6e45e1aeeb/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2023-09-27_%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB_10.06.08.png" alt="스크린샷 2023-09-27 오전 10.06.08.png"  />
+</p>
+<h3 id="method-area">Method Area<a hidden class="anchor" aria-hidden="true" href="#method-area">#</a></h3>
+<p>JVM이 시작될 때 생성되는 공간으로 바이트 코드를 처음 메모리 공간에 올릴 때 초기화되는 대상을 저장하기 위한 메모리 공간</p>
+<p>클래스가 로드될 때 적재되어서 프로그램이 종료될 때까지 저장됩니다.</p>
+<ul>
+<li>field info: 멤버 변수의 이름, 데이터 타입, 접근 제어자의 정보</li>
+<li>method info: 메소드 이름, return 타입, 함수 매개변수, 접근 제어자의 정보</li>
+<li>type info: class 인지 interface 인지 여부 저장, type의 속성, 이름 super class의 이름</li>
+</ul>
+<p>즉 정적 필드와 클래스 구조를 가지고 있는거죠.</p>
+<p><strong>run time constant pool</strong></p>
+<p>메서드 영역에 존재하는 별도의 관리 영역</p>
+<ul>
+<li>
+<p>각 클래스, 인터페이스마다 별도의 constant pool이 테이블이 존재하는데 클래스 생성할 때 참조해야할 정보들을 상수로 가지고 있는 영역입니다.</p>
+</li>
+<li>
+<p>JVM은 이 constant pool을 통해 해당 메서드나 필드의 실제 메모리 상 주소를 찾아 참조합니다.</p>
+<p>→ 상수 자료형을 저장하여 참조하고 중복을 막는 역할을 수행한다.</p>
+</li>
+</ul>
+<h3 id="heap-area">Heap Area<a hidden class="anchor" aria-hidden="true" href="#heap-area">#</a></h3>
+<p>JVM이 관리하는 프로그램 상에서 데이터를 저장하기 위해 런타임시 동적으로 할당하여 사용하는 영역</p>
+<p>new 연산자로 생성되는 클래스와 인스턴스 변수, 배열 타입 등 reference type이 저장되는 곳입니다. 힙 영역에 생성된 객체와 배열을 reference type을 이용해서 JVM 스택 영역의 변수나 다른 객체의 필드가 참조할 수 있습니다.</p>
+<p>또한 heap은 GC의 대상이 되는 영역이죠!</p>
+<h3 id="stack-area">Stack Area<a hidden class="anchor" aria-hidden="true" href="#stack-area">#</a></h3>
+<p>임시적으로 사용되는 변수나 정보들이 저장되는 영역</p>
+<p>메서드 호출시마다 그 메서드를 위한 각각의 스택 프레임이 생성되고 메서드 안에서 사용되는 값들을 저장하고, 호출된 메서드의 매개변수, 지역변수, 리턴 값 및 연산 시 일어나는 값들을 임시로 저장합니다. 그리고 메서드 수행이 끝나면 프레임별로 삭제합니다.</p>
+<ul>
+<li>기본 타입 변수는 스택 영역에 직접 값을 가짐.</li>
+<li>참조타입 변수는 힙 영역이나 메서드 영역의 객체 주소를 가짐.</li>
+</ul>
+<p><img loading="lazy" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/7b4f1c4b-3953-40fb-b55b-2620521a2d27/18ef24fa-9beb-4d23-b251-299ce15b0e2c/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2023-09-27_%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB_10.52.56.png" alt="스크린샷 2023-09-27 오전 10.52.56.png"  />
+</p>
+<p>따라서 다음과 같이 선언하면 생성된 클래스는 heap에, 클래스의 참조인 p는 stack에 저장되겠죠.</p>
+<p>스택 영역은 각 스레드마다 하나씩 존재하여, 스레드가 시작될 때 할당됩니다.</p>
+<p>프로세스가 메모리에 로드 될 때 스택 사이즈가 고정되어 있어, 런타임 시에 스택 사이즈를 바꿀 수는 없습니다. 만일 고정된 크기의 JVM 스택에서 프로그램 실행 중 메모리 크기가 충분하지 않다면 StackOverFlowError가 발생하게 될겁니다. 스레드를 종료하면 런타임 스택도 사라집니다.</p>
+<p><img loading="lazy" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/7b4f1c4b-3953-40fb-b55b-2620521a2d27/7c216995-e2dc-4163-9298-c276d48d0518/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2023-09-27_%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB_11.03.50.png" alt="스크린샷 2023-09-27 오전 11.03.50.png"  />
+</p>
+<h3 id="pc-레지스터">PC 레지스터<a hidden class="anchor" aria-hidden="true" href="#pc-레지스터">#</a></h3>
+<p>스레드가 시작될 때 생성되며, 현재 수행중인 JVM 명령어 주소를 저장하는 공간</p>
+<h3 id="네이티브-메서드-스택">네이티브 메서드 스택<a hidden class="anchor" aria-hidden="true" href="#네이티브-메서드-스택">#</a></h3>
+<p>자바 코드가 컴파일되어 생성되는 바이트 코드가 아닌 실제 실행할 수 있는 기계어로 작성된 프로그램을 실행시키는 영역</p>
+<h2 id="클래스-로더">클래스 로더<a hidden class="anchor" aria-hidden="true" href="#클래스-로더">#</a></h2>
+<p>클래스 로더는 런타임 중에 JVM의 메소드 영역에 동적으로 Java 클래스를 로드하고 링크, 초기화하여 Runtime Data Area에 올립니다.</p>
+<p>각각의 클래스 파일들을 찾아서 JVM 메모리에 탑재한다!!</p>
+<ol>
+<li>로딩
+<ul>
+<li>메소드 영역에 바이트 코드의 정보를 저장
+<ul>
+<li>로드된 클래스와 부모 클래스의 정보</li>
+<li>클래스, 인터페이스, enum 여부</li>
+<li>변수, 메소드 등의 정보</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>링크
+<ul>
+<li>로드된 클래스 파일들을 검증하고 사용할 수 있게 준비하는 과정</li>
+<li>검증
+<ul>
+<li>읽어들인 클래스가 JVM 명세에 명시된 대로 구성되어 있는지 검사</li>
+</ul>
+</li>
+<li>준비
+<ul>
+<li>클래스가 필요로 하는 메모리를 할당</li>
+</ul>
+</li>
+<li>분석
+<ul>
+<li>클래스의 상수 풀 내 모든 심볼릭 레퍼런스를 메소드 영역에 있는 다이렉트 레퍼런스로 변경</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>초기화
+<ul>
+<li>클래스 변수들을 적절한 값으로 초기화한다.</li>
+</ul>
+</li>
+</ol>
+<h3 id="클래스-로더-종류가-있는데요">클래스 로더…. 종류가 있는데요…<a hidden class="anchor" aria-hidden="true" href="#클래스-로더-종류가-있는데요">#</a></h3>
+<p><img loading="lazy" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/7b4f1c4b-3953-40fb-b55b-2620521a2d27/8cb0becb-97d0-4fcb-a2e5-1efef4bfa785/Untitled.png" alt="Untitled"  />
+</p>
+<ul>
+<li>부트스트랩 클래스 로더
+다른 모든 클래스로더의 부모가 되는 클래스 로더로 JVM을 구동시키기 위해서 가장 필수적인 라이브러리 클래스들을 로드합니다.
+즉, 다른 클래스로드가 나머지 시스템이 필요한 클래스를 로드할 수 있도록 최소한의 필수 클래스 (Object, Class, Classloader 등)만 로드하는거죠!</li>
+<li>확장 클래스 로더 (platform class loader)
+부트스트랩 클래스 로더를 자기 부모로 설정하고 필요할 때 클래스로딩 작업을 부모에게 넘기는 확장 클래스로더가 생깁니다. 확장 클래스로더를 사용하면 특정 OS나 플랫폼에 네이티브 코드를 제공하고 기본 환경을 오버라이드할 수 있습니다.</li>
+<li>애플리케이션 클래스 로더 ( = 시스템 클래스 로더)
+지정된 클래스패스에 위치한 유저 클래스를 로드합니다. 개발자가 작성한 클래스 파일을 JVM에 탑재합니다. 만일 개발자가 class loader를 구현하여 사용한다고 하면 이 application class loader를 상속받아야합니다.</li>
+</ul>
+<p>자바는 프로그램 실행 중 처음 보는 새 클래스를 디펜던시에 로드하고 클래스를 찾지 못한 클래스 로더는 기본적으로 자신의 부모 클래스로더에게 대신 찾아봐달라고 합니다. 이렇게 계속 거슬러 올라가 결국 부트스트랩 클래스로더도 찾지 못하면 ClassNotFoundException이 나는 겁니다.</p>
+<p><a href="https://tecoble.techcourse.co.kr/post/2021-07-15-jvm-classloader/">JVM에 관하여 - Part 2, ClassLoader</a></p>
+<h3 id="클래스로더의-3가지-작동-원칙">클래스로더의 3가지 작동 원칙<a hidden class="anchor" aria-hidden="true" href="#클래스로더의-3가지-작동-원칙">#</a></h3>
+<ul>
+<li>Delegation Principle (위임 원칙)</li>
+<li>Visibility Principle (가시범위 원칙)</li>
+<li>Uniqueness Principle (유일성 원칙)</li>
+</ul>
+<h2 id="실행-엔진">실행 엔진<a hidden class="anchor" aria-hidden="true" href="#실행-엔진">#</a></h2>
+<p>클래스 로더를 통해서 런타임 데이터 영역에 배치된 바이트 코드를 명령어 단위로 읽어서 실행합니다. 자바 바이트 코드는 기계가 바로 수행할 수 있는 언어가 아닌, 가상머신이 이해할 수 있는 중간 레벨로 컴파일 된 코드이다 보니 실행 엔진이 이 바이트 코드를 JVM이 실행할 수 있는 형태로 변경해주는 일을 하는거죠!</p>
+<p>이때 실행엔진을 통해서 바이트 코드를 실행하는 방법에는 두가지가 있습니다. 가장 기본적인 방법은 바이트 코드의 명령어를 한줄씩 해석하고 수행하는 인터프리터 방식이 있고 다음으로는 JIT 컴파일러를 사용하여 실행하는 방식입니다. JIT 컴파일러는 인터프리터 방식에서 같은 코드를 필요할 때마다 해석하고 수행하기를 반복하기 때문에 나타나는 비효율성을 해결하기 위해 도입되었데요. 우선 인터프리터로 해석되는 횟수가 설정해 둔 임계값을 넘었을 때 자주 사용되는 메서드로 판단하여 native code로 해석하여 캐싱해둔 후 차후에는 native code로 바로 빠르게 실행하는 방법입니다.</p>
+<p>인터프리터는 각 행마다 읽어 변환을 하고, JIT 컴파일러는 바이트 코드를 전체를 읽어 한꺼번에 변환을 합니다.</p>
+<h3 id="hotspot">HotSpot<a hidden class="anchor" aria-hidden="true" href="#hotspot">#</a></h3>
+<p>썬 마이크로시스템즈가 발표한 핫스팟 가상 머신은 성능 관점에서 자바에 가장 큰 변화를 가져왔는데요. 핫스팟이 나온 후에 자바는 C, C++에 뒤지지 않을 성능을 자랑하게 되었습니다.</p>
+<p><img loading="lazy" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/7b4f1c4b-3953-40fb-b55b-2620521a2d27/1b7f4c66-35d6-49b6-8496-078c99a93220/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2023-10-14_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_2.51.55.png" alt="스크린샷 2023-10-14 오후 2.51.55.png"  />
+</p>
+<p>C++ 같은 언어는 컴퓨터와 OS가 실제로 어떻게 작동해야 하는지 개발자가 아주 세세하게 일러줘야 하는 언어로 이런 종류의 언어들은 작성한 소스 코드는 빌드하면 빌드한 그 플랫폼에 종속되는 기계어로 컴파일 됩니다. (Ahead Of Time, AOT 컴파일)</p>
+<p>하지만 핫스팟 VM은 JVM 내에서 프로그램의 런타임 동작을 분석하고 성능에 가장 유리한 방향으로 최적화를 적용하는 가상머신으로 개발되었습니다. 핫스팟은 인터프리티드 모드로 실행하는 동안 애플리케이션을 모니터링하면서 자주 실행되는 코드 파트를 발견해 JIT 컴파일을 수행합니다. 자주 실행된다의 기준은 임계점을 두고 이를 넘어가면 프로파일러가 해당 코드 섹션을 컴파일, 최적화합니다.</p>
+<p>자바는 동적 인라이닝이나 가상 호출 등으로 성능을 개선할 수 있습니다.</p>
+<p>핫스팟의 정교한 접근 방식 덕분에 엄청난 혜택이 생겼지만 반대로 상식적인 추론으로 애플리케이션이 동작하는 방식을 단순하게 넘겨짚을 수 없게 되었죠. 그래서 한정된 부분의 자바 코드의 성능을 분석하는 것은 전체 애플리케이션을 대상으로 분석하는 작업보다 훨씬 까다롭고 버겁습니다.</p>
+<h3 id="코드-캐시">코드 캐시<a hidden class="anchor" aria-hidden="true" href="#코드-캐시">#</a></h3>
+<p>JIT compiled 코드는 코드 캐시라는 메모리 영역에 저장됩니다. 이곳에는 인터프리터 부속 등 VM 자체 네이티브 코드가 함께 들어가 있습니다. VM 시작시 코드 캐시는 설정된 값으로 최대 크기가 고정되므로 확장이 불가능합니다. 코드 캐시가 꽉차면 JIT 컴파일은 더이상 되지 않습니다.</p>
+<p>※ 코드 캐시가 부족할 경우</p>
+<ul>
+<li>일부 핫스팟은 컴파일만 컴파일 되고, 다른 영역은 컴파일 되지 않는다. 따라서 많은 양의 코드가 인터프리터로 실행되어 느려진다.</li>
+<li>JVM Warning이 발생한다. 하지만 이 로그는 확인하기 어렵다. 따라서 컴파일 로그를 따로 보는 편이 좋다.
+일반 서버 컴파일러를 사용할 때는 컴파일 대상이 되는 클래스의 개수가 코드 캐시를 가득 채울 일은 그다지 없다. 하지만 클라이언트나 티어드 컴파일을 사용할 때는 주의해야 한다. 코드 캐시가 부족한 상황이 나타날 가능성이 크다.
+<a href="https://blog.naver.com/PostView.nhn?blogId=kbh3983&amp;logNo=220985785358">https://blog.naver.com/PostView.nhn?blogId=kbh3983&amp;logNo=220985785358</a></li>
+</ul>
+<h3 id="jit-컴파일">JIT 컴파일<a hidden class="anchor" aria-hidden="true" href="#jit-컴파일">#</a></h3>
+<p>JIT 컴파일은 런타임에 프로그램을 고도로 최적화한 기계어로 변환하는 기법입니다. 프로그램의 런타임 실행 정보를 수집하여 어느 부분이 자주 쓰이고, 어느 부분을 최적화해야 가장 효과가 좋은지 프로파일을 만들어 결정을 내리죠. (→ 프로파일 기반 최적화)</p>
+<p>JIT 서브 시스템은 실행 프로그램과 VM 리소스를 공유하므로 프로파일링 및 최적화 비용 및 성능 향상 기대치 사이의 균형을 맞추어야 합니다.</p>
+<p>바이트코드를 네이티브 코드로 컴파일하는 비용은 런타임에 지불됩니다. 이 과정에서 프로그램 실행에만 온전히 동원됐을 일부 리소스(CPU 사이클, 메모리)가 소비되므로 JIT 컴파일은 산발적으로 수행됩니다. 또 VM은 최적화하면 가장 좋은 지점을 파악하기 위해(핫 스팟을 찾고자) 각종 프로그램 관련 지표를 수집합니다.</p>
+<p>임계점에 다다른 메서드가 컴파일되면 에미터 서브 시스템이 컴파일 스레드를 가동해 바이트코드를 기계어로 변환합니다.</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>핫스팟은 프로파일링 정보를 보관하지 않고 VM이 꺼지면 모두 버렸다가 켜지면 처음부터 다시 생성합니다.</p>
+<ul>
+<li>어떤 메서드가 JIT 컴파일 되고 있는지 파악하는 flag
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-jsx" data-lang="jsx"><span style="display:flex;"><span><span style="color:#f92672">-</span><span style="color:#a6e22e">XX</span><span style="color:#f92672">:+</span><span style="color:#a6e22e">PrintCompilation</span>
+</span></span></code></pre></div></li>
+</ul>
+<h3 id="핫스팟-내부-컴파일러">핫스팟 내부 컴파일러<a hidden class="anchor" aria-hidden="true" href="#핫스팟-내부-컴파일러">#</a></h3>
+<ul>
+<li>C1 (클라이언트 컴파일러)</li>
+<li>C2 (서버 컴파일러)</li>
+</ul>
+<p>원래는 이름에 맞게 C1은 클라이언트 프로그램에, C2는 실행 시간이 긴 서버 프로그램에 주로 사용했지만 요즘은 구분하지 않고 환경에 맞게 최대한의 성능을 발휘하는 선택을 하도록 구성되어 있습니다.</p>
+<p>C1으로 컴파일하면 컴파일 시간이 더 짧지만 C2로 컴파일하면 최적화가 더 많이, 잘되어 있습니다.</p>
+<p>자바 6부터는 단계별 컴파일(tiered compilation) 모드를 지원하는데요. 인터프리티드 모드에서 실행하다가 C1 으로, 더 고급 최적화를 위해 C2를 수행하는 방식으로 단계를 주는 것입니다. 컴파일 방식마다 거치는 단계 순서가 다르니까 찾아보시면 좋을 것 같습니다.ㅎㅎ</p>
+<h3 id="간단한-jit-튜닝-방법">간단한 JIT 튜닝 방법<a hidden class="anchor" aria-hidden="true" href="#간단한-jit-튜닝-방법">#</a></h3>
+<p>튜닝하기 전에 먼저 점검해야할 항목이 있습니다.</p>
+<ol>
+<li>printCompilation 을 걸고 애플리케이션을 수행한다.</li>
+<li>어느 메서드가 컴파일되었는지 기록된 로그를 수집한다.</li>
+<li>ReservedCodeCacheSize를 통해서 코드 캐시를 늘린다.</li>
+<li>애플리케이션을 재실행한다.</li>
+<li>확장된 캐시에서 compiled method를 살펴본다.</li>
+</ol>
+<p>이 과정을 거치면서 확인해야할 부분은 다음과 같습니다.</p>
+<ul>
+<li>캐시 크기를 늘렸을 때 컴파일된 메서드의 개수가 유의미하게 늘어나는가?</li>
+<li>주요 트랜잭션 경로상에 위치한 주요 메서드가 모두 컴파일 되었는가?</li>
+</ul>
+<p>캐시 크기를 늘려도 컴파일된 메서드의 개수는 그대로이고 로딩 패턴이 뚜렷하다면 JIT 컴파일러의 리소스가 부족한게 아니기 때문에 트랜젝션이 몰리는 경로에 있는 메서드가 컴파일 로그에 전부 나타나는지 확인해야합니다. 만일 전부 나타나지 않았다면 왜 컴파일되지 않았는지 원인을 찾아야겠죠.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2023 <a href="https://anso33.github.io/">anso33-tech-log</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
