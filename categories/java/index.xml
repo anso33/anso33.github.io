@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>anso33-tech-log</title>
-    <link>https://anso33.github.io/</link>
-    <description>Recent content on anso33-tech-log</description>
+    <title>java on anso33-tech-log</title>
+    <link>https://anso33.github.io/categories/java/</link>
+    <description>Recent content in java on anso33-tech-log</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ko</language>
-    <lastBuildDate>Tue, 23 Jan 2024 17:19:09 +0900</lastBuildDate><atom:link href="https://anso33.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 23 Jan 2024 17:19:09 +0900</lastBuildDate><atom:link href="https://anso33.github.io/categories/java/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>item01. 생성자 대신 정적 팩토리 메서드를 고려한다.</title>
       <link>https://anso33.github.io/post/efj3-item1/</link>

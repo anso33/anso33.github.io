@@ -3,7 +3,7 @@
 <html lang="ko">
 <head>
 
-<title>anso33-tech-log | Categories</title>
+<title>anso33-tech-log | item01. 생성자 대신 정적 팩토리 메서드를 고려한다.</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
     <link rel="apple-touch-icon" sizes="180x180" href='/favicon/apple-touch-icon.png'>
@@ -13,7 +13,7 @@
     <link rel="mask-icon" href=' /favicon/safari-pinned-tab.svg' color="#5bbad5" />
     <link rel="shortcut icon" href='/favicon/favicon.ico' />
     <meta name="theme-color" content="#ffffff">
-    <meta property="og:title" content="anso33-tech-log | Categories" />
+    <meta property="og:title" content="anso33-tech-log | item01. 생성자 대신 정적 팩토리 메서드를 고려한다." />
     
     
     
@@ -24,20 +24,19 @@
     
 
 
-	
 
-<meta name="description" content="개발 기록 from anso33">
+<meta name="description" content="effective java 3rd edition">
 <meta property="og:site_name" content="anso33-tech-log">
-<meta property="og:description" content="개발 기록 from anso33">
-<meta property="og:url" content="https://anso33.github.io/categories/">
+<meta property="og:description" content="effective java 3rd edition">
+<meta property="og:url" content="https://anso33.github.io/post/efj3-item1/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="">
 
-<link rel="canonical" href="https://anso33.github.io/categories/">
+<link rel="canonical" href="https://anso33.github.io/post/efj3-item1/">
 
-<meta name="twitter:description" content="개발 기록 from anso33">
+<meta name="twitter:description" content="effective java 3rd edition">
 <meta property="article:published_time" content="2024-01-23T17:19:09&#43;09:00">
 <meta property="article:updated_time" content="2024-01-23T17:19:09&#43;09:00">
 
@@ -118,37 +117,102 @@
             <div class="lg:mx-5">
 <div class="grid grid-cols-3 gap-4">
   
-  <div class="col-span-3 lg:col-span-2 mb-3">
-  
-    <h2 class="text-4xl dark:text-white">Categories</h2>
+  <div class="col-span-3 lg:col-span-2 dark:text-white">
     
-    
-    
-    
-    
-    <a href="/categories/java/">
-      <div
-    class="bg-white w-full p-3 lg:max-w-full lg:flex mt-5 transform hover:-translate-y-1 hover:shadow-md duration-500 dark:bg-warmgray-900">
-    
-    
-    
-    
-    
-    <div class="relative pl-4 p-2 justify-between leading-normal max-w-full w-full">
-        <div class="text-gray-900 font-bold text-xl mb-2 dark:text-white">java</div>
-        <p class="text-gray-700 text-base pb-5 dark:text-gray-300">...</p>
-        <p class="text-sm text-gray-600 absolute items-center right-0 bottom-0 dark:text-gray-400">
-            <time><span class="icon-access_time mr-1"></span>2024/01/23</time>
-        </p>
-    </div>
+      <div class="bg-white dark:bg-warmgray-900 p-5 my-4">
+        <h1 class="mb-2 text-4xl font-bold">item01. 생성자 대신 정적 팩토리 메서드를 고려한다.</h1>
+        <aside id="meta">
+          <div>
+            <section>
+              <h4 id="date"><span class="icon-access_time mr-2"></span>2024/01/23
+              </h4>
+            </section>
+            
+          </div>
+        </aside>
+        
+        
+        <div class="prose md:prose-lg lg:prose-xl max-w-none dark:prose-invert mt-5"><p><strong>생성자 말고도 정적 팩토리 메서드를 사용할 수 있으니 각자의 장단점을 잘 알고 상황에 알맞은 선택을 하자.</strong></p>
+<h3 id="정적-팩토리-메서드-static-factory-method">정적 팩토리 메서드, static factory method</h3>
+<p>클래스의 인스턴스를 반환하는 단순한 정적 메서드</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Boolean <span style="color:#a6e22e">valueOf</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">boolean</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> b <span style="color:#f92672">?</span> Boolean<span style="color:#f92672">.</span><span style="color:#a6e22e">TRUE</span> <span style="color:#f92672">:</span> Boolean<span style="color:#f92672">.</span><span style="color:#a6e22e">FALSE</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h3 id="정적-팩토리-메서드의-장점">정적 팩토리 메서드의 장점</h3>
+<ol>
+<li>
+<p><strong>반환될 객체의 특성을 설명하는 이름을 가질 수 있다.</strong></p>
+<ol>
+<li>한 클래스 안에 시그니처가 같은 생성자가 여러 개 필요할 때 생성자를 정적 팩터리 메서드로 바꾸고 각각의 차이를 잘 드러내는 이름을 지어준다.</li>
+</ol>
+</li>
+<li>
+<p><strong>호출될 때마다 인스턴스를 새로 생성하지 않아도 된다.</strong></p>
+<ol>
+<li>(특히 생성 비용이 큰)같은 객체가 자주 요청되는 상황에서는 성능을 상당히 끌어올릴 수 있다.</li>
+<li>반복되는 요청에 같은 객체를 반환할 수 있는 정적 팩터리 방식의 클래스는 언제 어느 인스턴스를 살아있게 할지 통제할 수 있다. ( ⇒ 인스턴스 통제, instance-controlled )
+<ol>
+<li>인스턴스를 통제하면 클래스를 싱글톤으로 만들수도, 인스턴스화 불가로 만들 수도 있으며 불변 값 클래스에서 동치인 인스턴스가 단 하나임을 보장할 수 있다.</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>반환 타입의 하위 타입 객체를 반환할 수 있는 능력이 있다.</strong></p>
+<ol>
+<li>
+<p>반환할 객체의 클래스를 자유롭게 선택할 수 있어 유연성이 엄청 높아진다.</p>
+<p>→ 구현 클래스를 공개하지 않고도 객체를 반환할 수  있다.</p>
+</li>
+<li></li>
+</ol>
+</li>
+<li>
+<p><strong>입력 매개변수에 따라 매번 다른 클래스의 객체를 반환할 수 있다.</strong></p>
+</li>
+<li>
+<p><strong>정적 팩토리 메서드를 작성하는 시점에는 반환할 객체의 클래스가 존재하지 않아도 된다.</strong></p>
+</li>
+</ol>
+<h3 id="정적-팩토리-메서드의-단점">정적 팩토리 메서드의 단점</h3>
 </div>
-    </a>
+        
+        <aside id="meta">
+          
+          <hr class="py-2">
+          <div id="categories">
+            <span class="icon-folder text-xl mr-1"></span>
+            
+            <span
+              class="inline-flex py-2 leading-4 mr-2 mb-2 content-center bg-gray-200 justify-center h-8 px-3 text-blue-500 duration-200 hover:text-black dark:bg-warmgray-800"><a
+                href='https://anso33.github.io/categories/java'>java</a></span>
+            
+          </div>
+          
+        </aside>
+      </div>
+      <div class="bg-white dark:bg-warmgray-900 p-5 my-4">
+        <div class="grid grid-cols-2">
+          <div class="col-span-1">
+            
+            <a class="previous lg:text-2xl" href="https://anso33.github.io/post/jvm-start/">
+              <div
+                class="transition-colors duration-300 border border-gray-600 hover:border-black h-auto m-3 text-center py-3 lg:py-1">
+                <span class="icon-keyboard_arrow_left"></span> Jvm Start
+              </div>
+            </a>
+            
+          </div>
+          
+        </div>
+      </div>
+      <div class="bg-white dark:bg-warmgray-900 p-5 my-4">
+        <div class="mb-3">
+          
+        </div>
+      </div>
+    </div>
     
-    
-
-
-  </div>
-  
     <div class="hidden lg:block lg:col-span-1">
     
     
@@ -222,7 +286,8 @@
         
     
 </div>
-  
+    
+  </div>
 </div>
 
             </div>
